@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<head>
+    <title>Shelter Me -- the site for finding shelters.</title>
+    <style type="text/css">
+        html, body, #map-canvas {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    {{
+response.files.insert(0,URL('static','js/jquery.js'))
+#response.files.insert(1,URL('static','css/calendar.css'))
+#response.files.insert(2,URL('static','js/calendar.js'))
+#response.files.insert(3,URL('static','js/web2py.js'))
+#response.include_meta()
+response.include_files()
+    }}
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js">
+    </script>
+
+    <script type="text/javascript">
+        var map;
+        function initialize() {
+            var mapOptions = {
+                zoom: 16,
+                center: new google.maps.LatLng(47.603779, -122.330243),
+                mapTypeId: google.maps.MapTypeId.TERRAIN
+            };
+            map = new google.maps.Map(document.getElementById('map-canvas'),
+                mapOptions);
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var pos = new google.maps.LatLng(position.coords.latitude,
+                                                 position.coords.longitude); // get here.
+
+                var infowindow = new google.maps.InfoWindow({
+                    map: map,
+                    position: pos,
+                    content: 'You are here'
+                }); // add a tool-tip
+
+                // There's a shelter @ 232 warren ave n, seattle, wa, 98109.  Here's the LatLong data ( 47.6206989,-122.3537259 )
+                var ShelterLatLong = new google.maps.LatLng(47.603779, -122.330243);
+
+                //var ShelterList = [ShelterLatLong];
+                var marker = new google.maps.Marker({
+                    position: ShelterLatLong,
+                    //map: map,
+                    title: 'City Hall Night Shelter'
+                });
+                marker.setMap(map);
+                map.setCenter(pos); // set the map center to here
+            });
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+    <script>
+        jQuery(document).ready(function () {
+            initialize();
+        });
+    </script>
+</head>
+<!--{{=item}}-->
+<body>
+    <div id="map-canvas" style="height:100%; width:100%;">>Loading Map...</div>
+</body>
